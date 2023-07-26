@@ -7,6 +7,13 @@ const errorHandler = (err, req, res, next) => {
 
   if (err.name === 'SequelizeValidationError') {
     console.log(`================${err.message}================`);
+    
+    if (err.message.includes('year')) {
+      res.status(400).json({
+        error: 'Validation error: Year must be from 1991 to present'
+      });
+    }
+    
     res.status(400).json({ error: err.message });
   } else if (err.name === 'Error') {
     res.status(400).json({ error: err.message });
