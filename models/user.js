@@ -22,6 +22,11 @@ User.init({
     validate: {
       isEmail: true,
     }
+  },
+  blogId: {
+    type: DataTypes.INTEGER,
+    allowNull: false,
+    references: { model: 'user', key: 'id' }
   }
 }, {
   sequelize,
