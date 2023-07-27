@@ -34,10 +34,6 @@ Blog.init({
       max: new Date().getFullYear()
     }
   },
-  read: {
-    type: DataTypes.BOOLEAN,
-    defaultValue: false
-  },
   userId: {
     type: DataTypes.INTEGER,
     allowNull: false,

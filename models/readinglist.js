@@ -1,4 +1,4 @@
-const { Model, DataTypes } = require('sequelize');
+const { DataTypes, Model } = require('sequelize')
 
 const { sequelize } = require('../util/db');
 
@@ -6,14 +6,9 @@ class Readinglist extends Model {};
 
 Readinglist.init({
   id: {
-    type:DataTypes.INTEGER,
-    primaryKey: true,
-    autoIncrement: true,
-  },
-  userId: {
     type: DataTypes.INTEGER,
-    allowNull: false,
-    references: { model: 'users', key: 'id' }
+    primaryKey: true,
+    autoIncrement: true
   },
   blogId: {
     type: DataTypes.INTEGER,
@@ -22,7 +17,6 @@ Readinglist.init({
   },
   read: {
     type: DataTypes.BOOLEAN,
-    allowNull: false,
     defaultValue: false
   }
 }, {

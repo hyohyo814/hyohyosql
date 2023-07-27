@@ -66,10 +66,10 @@ module.exports = {
         defaultValue: sequelize.fn('NOW')
       }
     });
-    await queryInterface.addColumn('blog', 'user_id', {
+    await queryInterface.addColumn('blogs', 'user_id', {
       type: DataTypes.INTEGER,
       allowNull: false,
-      references: { model: 'user', key: 'id' }
+      references: { model: 'users', key: 'id' }
     });
   },
   down: async ({ context: queryInterface }) => {

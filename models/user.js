@@ -22,11 +22,6 @@ User.init({
     validate: {
       isEmail: true,
     }
-  },
-  blogId: {
-    type: DataTypes.INTEGER,
-    allowNull: false,
-    references: { model: 'user', key: 'id' }
   }
 }, {
   sequelize,
@@ -35,4 +30,4 @@ User.init({
   modelName: 'user'
 });
 
-module.exports = User
+module.exports = User;

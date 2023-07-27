@@ -4,12 +4,20 @@ const { Readinglist, Blog, User } = require('../models');
 
 router.get('/', async (req, res) => {
   const readinglist = await User.findAll({
-    attributes: { exclude: [''] },
-    include: [{
-      model: Blog,
+    attributes: { exclude: [
+      'createdAt',
+      'updatedAt',
+      'id'
+    ] },
+    include: [
+    {
+      model: Readinglist,
+      attributes: {
+        exclude: []
+      }
     }]
   });
-
+  
   res.json(readinglist);
 });
 

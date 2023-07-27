@@ -2,7 +2,23 @@ const { DataTypes } = require('sequelize');
 
 module.exports = {
   up: async ({ context: queryInterface }) => {
-    await queryInterface.createTable('readinglist', {
+    await queryInterface.createTable('readinglists', {
+      id: {
+        type: DataTypes.INTEGER,
+        primaryKey: true,
+        autoIncrement: true
+      },
+      blog_id: {
+        type: DataTypes.INTEGER,
+        allowNull: false,
+        reference: { model: 'blogs', key: 'id' }
+      },
+      read: {
+        type: DataTypes.BOOLEAN,
+        defaultValue: false
+      }
+    });
+    await queryInterface.createTable('usersblogs', {
       id: {
         type: DataTypes.INTEGER,
         primaryKey: true,
@@ -14,19 +30,15 @@ module.exports = {
         allowNull: false,
         reference: { model: 'users', key: 'id' }
       },
-      blog_id: {
+      readinglist_id: {
         type: DataTypes.INTEGER,
-        allowNull: false,
-        reference: { model: 'blogs', key: 'id' }
-      },
-      read: {
-        type: DataTypes.BOOLEAN,
-        allowNull: false,
-        defaultValue: false
+        allowNull: true,
+        reference: { model: 'readinglists', key: 'id' }
       }
     });
   },
   down: async ({ context: queryInterface }) => {
-    await queryInterface.dropTable('readinglist');
+    await queryInterface.dropTable('usersblogs');
+    await queryInterface.dropTable('readinglists');
   }
 };
