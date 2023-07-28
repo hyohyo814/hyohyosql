@@ -10,10 +10,10 @@ Readinglist.init({
     primaryKey: true,
     autoIncrement: true
   },
-  blogId: {
-    type: DataTypes.INTEGER,
+  seed: {
+    type: DataTypes.TEXT,
+    unique: true,
     allowNull: false,
-    references: { model: 'blogs', key: 'id' }
   },
   read: {
     type: DataTypes.BOOLEAN,

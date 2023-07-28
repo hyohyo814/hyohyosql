@@ -8,10 +8,10 @@ module.exports = {
         primaryKey: true,
         autoIncrement: true
       },
-      blog_id: {
-        type: DataTypes.INTEGER,
+      seed: {
+        type: DataTypes.TEXT,
+        unique: true,
         allowNull: false,
-        reference: { model: 'blogs', key: 'id' }
       },
       read: {
         type: DataTypes.BOOLEAN,
@@ -29,6 +29,11 @@ module.exports = {
         type: DataTypes.INTEGER,
         allowNull: false,
         reference: { model: 'users', key: 'id' }
+      },
+      blog_id: {
+        type: DataTypes.INTEGER,
+        allowNull: false,
+        reference: { model: 'blogs', key: 'id' }
       },
       readinglist_id: {
         type: DataTypes.INTEGER,

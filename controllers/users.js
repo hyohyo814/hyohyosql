@@ -1,6 +1,6 @@
 const router = require('express').Router();
 
-const { User, Blog } = require('../models');
+const { User, Blog, UsersBlogs, Readinglist } = require('../models');
 
 const userFinder = async (req, res, next) => {
   req.user = await User.findByPk(req.params.id);
@@ -9,13 +9,32 @@ const userFinder = async (req, res, next) => {
 
 router.get('/', async (req, res) => {
   const users = await User.findAll({
-    include: {
-      model: Blog,
-      attributes: { exclude: [
-        'userId',
+    attributes: {
+      exclude: [
+        'id',
         'createdAt',
         'updatedAt'
-      ] }
+      ]
+    },
+    include: {
+      model: Readinglist,
+      attributes: { exclude: ['seed'] },
+      through: {
+        attributes: []
+      },
+      include: {
+        model: Blog,
+        attributes: {
+          exclude: [
+            'userId',
+            'createdAt',
+            'updatedAt'
+          ]
+        },
+        through: {
+          attributes: []
+        }
+      }
     }
   });
   res.json(users);
@@ -27,7 +46,46 @@ router.post('/', async (req, res) => {
 });
 
 router.get('/:id', userFinder, async (req, res) => {
-  res.json(req.user);
+  const user = await User.findByPk(req.params.id, {
+    attributes: {
+      exclude: [
+        'createdAt',
+        'updatedAt',
+        'id'
+      ]
+    },
+    include: {
+      model: Readinglist,
+      attributes: { exclude: ['seed'] },
+      include: [
+        {
+          model: Blog,
+          attributes: {
+            exclude: [
+              'userId',
+              'createdAt',
+              'updatedAt'
+            ]
+          },
+          through: {
+            attributes: []
+          }
+        }
+      ],
+      attributes: {
+        exclude: [
+          'blogId',
+          'read',
+        ]
+      },
+      through: {
+        attributes: []
+      }
+
+    }
+  })
+
+  res.json(user);
 });
 
 router.delete('/:id', userFinder, async (req, res) => {
