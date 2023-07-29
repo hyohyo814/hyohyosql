@@ -27,7 +27,6 @@ const errorHandler = (err, req, res, next) => {
   next(err);
 };
 
-
 const sessionVerifier = async (req, res, next) => {
   const user = await User.findByPk(req.decodedToken.id);
 
@@ -43,9 +42,12 @@ const sessionVerifier = async (req, res, next) => {
     }
   });
 
+  const authorization = req.get('authorization');
+  const tokenAuth = authorization.substring(7);
+
   console.log(session.toJSON());
-  if (session.active === false) {
-    throw new Error('Session expired')
+  if (session.active === false || session.token !== tokenAuth) {
+    throw new Error('Session invalid')
   }
 
   next();

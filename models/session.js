@@ -24,6 +24,11 @@ Session.init({
     type: DataTypes.INTEGER,
     allowNull: false,
     reference: { model: 'users', key: 'id'}
+  },
+  token: {
+    type: DataTypes.TEXT,
+    allowNull: false,
+    unique: true
   }
 }, {
   sequelize,

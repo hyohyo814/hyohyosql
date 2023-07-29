@@ -37,6 +37,8 @@ router.post('/', async (req, res) => {
     id: user.id
   };
 
+  const token = jwt.sign(userForToken, SECRET);
+
   const seedGen = uuid();
 
   console.log(`===================${seedGen}==================`)
@@ -46,16 +48,13 @@ router.post('/', async (req, res) => {
     seed: seedGen,
     userId: user.id,
     active: true,
+    token: token
   });
 
   console.log(`===================${session.id}===================`);
 
   user.sid = session.id;
   await user.save();
-
-  
-
-  const token = jwt.sign(userForToken, SECRET);
 
   res.status(200).send({
     token, username: user.username, name: user.name, sessionId: user.sessionId
