@@ -26,6 +26,10 @@ User.init({
   disabled: {
     type: DataTypes.BOOLEAN,
     defaultValue: false
+  },
+  sessionId: {
+    type: DataTypes.INTEGER,
+    references: { model: 'sessions', key: 'id' }
   }
 }, {
   sequelize,

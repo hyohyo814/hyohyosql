@@ -1,8 +1,9 @@
 const jwt = require('jsonwebtoken');
 const router = require('express').Router();
+const { uuid } = require('uuidv4'); 
 
 const { SECRET } = require('../util/config');
-const User = require('../models/user');
+const { User, Session } = require('../models');
 
 router.post('/', async (req, res) => {
   const { username, password } = req.body;
@@ -12,6 +13,14 @@ router.post('/', async (req, res) => {
       username: username
     }
   });
+
+  const userJSON = user.toJSON();
+
+  console.log(userJSON.disabled)
+
+  if (userJSON.disabled === true) {
+    throw new Error('User has been disabled');
+  }
 
   const passwordCorrect = password ==='banana';
 
@@ -26,11 +35,36 @@ router.post('/', async (req, res) => {
     id: user.id
   };
 
+  const seedGen = uuid();
+
+  console.log(`===================${seedGen}==================`)
+
+  const createSession = await Session.create({
+    seed: seedGen
+  });
+
+  const currSession = await Session.findOne({
+    where: {
+      seed: seedGen
+    }
+  });
+
+  if (user.sessionId !== null) {
+    await Session.destroy({
+      where: {
+        id: user.sessionId
+      }
+    })
+  }
+
+  user.sessionId = currSession.id
+  await user.save();
+
   const token = jwt.sign(userForToken, SECRET);
 
   res.status(200).send({
-    token, username: user.username, name: user.name
+    token, username: user.username, name: user.name, sessionId: user.sessionId
   });
-})
+});
 
 module.exports = router;
