@@ -72,6 +72,7 @@ router.get('/:id', async (req, res) => {
         through: {
           attributes: []
         },
+        where,
         include: [
           {
             attributes: {
