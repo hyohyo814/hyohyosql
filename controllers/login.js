@@ -5,6 +5,7 @@ const { uuid } = require('uuidv4');
 const { SECRET } = require('../util/config');
 const { User, Session } = require('../models');
 
+
 router.post('/', async (req, res) => {
   const { username, password } = req.body;
 
@@ -37,27 +38,19 @@ router.post('/', async (req, res) => {
 
   const seedGen = uuid();
 
+
+
   console.log(`===================${seedGen}==================`)
 
   const createSession = await Session.create({
     seed: seedGen
   });
-
-  const currSession = await Session.findOne({
-    where: {
-      seed: seedGen
-    }
-  });
-
-  if (user.sessionId !== null) {
-    await Session.destroy({
-      where: {
-        id: user.sessionId
-      }
-    })
+  
+  if (typeof window !== 'undefined') {
+    console.log('success')
   }
 
-  user.sessionId = currSession.id
+  user.sessionId = createSession.id
   await user.save();
 
   const token = jwt.sign(userForToken, SECRET);
