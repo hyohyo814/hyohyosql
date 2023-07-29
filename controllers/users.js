@@ -1,7 +1,7 @@
 const router = require('express').Router();
 const { Op } = require('sequelize');
 
-const { User, Blog, UsersBlogs, Readinglist } = require('../models');
+const { User, Blog, UsersBlogs, Readinglist, Session } = require('../models');
 
 const userFinder = async (req, res, next) => {
   req.user = await User.findByPk(req.params.id);
@@ -46,7 +46,7 @@ router.post('/', async (req, res) => {
   res.json(user);
 });
 
-router.get('/:id', userFinder, async (req, res) => {
+router.get('/:id', async (req, res) => {
   const where = {};
 
   if (req.query.read) {
@@ -61,41 +61,41 @@ router.get('/:id', userFinder, async (req, res) => {
   const user = await User.findByPk(req.params.id, {
     attributes: {
       exclude: [
+        'id',
         'createdAt',
-        'updatedAt',
-        'id'
+        'updatedAt'
       ]
     },
-    include: {
-      attributes: {
-        exclude: [
-          'blogId',
-          'seed',
+    include: [
+      { 
+        model: Readinglist,
+        through: {
+          attributes: []
+        },
+        include: [
+          {
+            attributes: {
+              exclude: [
+                'blogId',
+                'seed'
+              ]
+            },
+            model: Blog,
+            attributes: {
+              exclude: [
+                'userId',
+                'createdAt',
+                'updatedAt'
+              ]
+            },
+            through: {
+              attributes: []
+            }
+          },
         ]
       },
-      where,
-      model: Readinglist,
-      include: [
-        {
-          model: Blog,
-          attributes: {
-            exclude: [
-              'userId',
-              'createdAt',
-              'updatedAt'
-            ]
-          },
-          through: {
-            attributes: []
-          }
-        }
-      ],
-      through: {
-        attributes: []
-      }
-
-    }
-  })
+    ]
+  });
 
   res.json(user);
 });

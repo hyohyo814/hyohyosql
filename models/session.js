@@ -14,6 +14,16 @@ Session.init({
     type: DataTypes.TEXT,
     allowNull: false,
     unique: true
+  },
+  active: {
+    type: DataTypes.BOOLEAN,
+    allowNull: false,
+    defaultValue: true
+  },
+  userId: {
+    type: DataTypes.INTEGER,
+    allowNull: false,
+    reference: { model: 'users', key: 'id'}
   }
 }, {
   sequelize,

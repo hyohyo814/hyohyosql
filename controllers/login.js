@@ -38,20 +38,13 @@ router.post('/', async (req, res) => {
 
   const seedGen = uuid();
 
-
-
   console.log(`===================${seedGen}==================`)
-
-  const createSession = await Session.create({
-    seed: seedGen
+  console.log(`===================${user.id}==================`)
+  await Session.create({
+    seed: seedGen,
+    userId: user.id,
+    active: true
   });
-  
-  if (typeof window !== 'undefined') {
-    console.log('success')
-  }
-
-  user.sessionId = createSession.id
-  await user.save();
 
   const token = jwt.sign(userForToken, SECRET);
 

@@ -1,4 +1,7 @@
 const jwt = require('jsonwebtoken');
+const { client_encoding } = require('pg/lib/defaults');
+
+const { User, Session } = require('../models');
 
 const { SECRET } = require('./config');
 
@@ -24,6 +27,25 @@ const errorHandler = (err, req, res, next) => {
   next(err);
 };
 
+
+const sessionVerifier = async (req, res, next) => {
+  const session = await Session.findOne({
+    include: {
+      model: User,
+      where: {
+        id: req.decodedToken.id
+      }
+    }
+  });
+
+  console.log(session.toJSON());
+  if (session.active === false) {
+    throw new Error('Session expired')
+  }
+
+  next();
+};
+
 const tokenExtractor = (req, res, next) => {
   const authorization = req.get('authorization');
   if (authorization && authorization.toLowerCase().startsWith('bearer ')) {
@@ -35,4 +57,4 @@ const tokenExtractor = (req, res, next) => {
   next();
 };
 
-module.exports = { errorHandler, tokenExtractor }
+module.exports = { errorHandler, tokenExtractor, sessionVerifier }

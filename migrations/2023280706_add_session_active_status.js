@@ -2,13 +2,13 @@ const { DataTypes } = require('sequelize');
 
 module.exports = {
   up: async ({ context: queryInterface }) => {
-    await queryInterface.addColumn('sessions', 'user_id', {
-      type: DataTypes.INTEGER,
+    await queryInterface.addColumn('sessions', 'active', {
+      type: DataTypes.BOOLEAN,
       allowNull: false,
-      reference: { model: 'users', key: 'id' }
+      defaultValue: true
     });
   },
   down: async ({ context: queryInterface }) => {
-    await queryInterface.removeColumn('sessions', 'user_id');
+    await queryInterface.removeColumn('sessions', 'active');
   }
 };

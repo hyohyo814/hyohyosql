@@ -16,8 +16,8 @@ Readinglist.belongsToMany(Blog, { through: UsersBlogs });
 Readinglist.hasMany(UsersBlogs);
 UsersBlogs.belongsTo(Readinglist);
 
-Session.hasOne(User);
-User.belongsTo(Session);
+User.hasMany(Session);
+Session.belongsTo(User);
 
 module.exports = {
   Blog, User, UsersBlogs, Readinglist, Session
