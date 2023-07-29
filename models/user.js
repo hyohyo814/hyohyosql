@@ -26,6 +26,10 @@ User.init({
   disabled: {
     type: DataTypes.BOOLEAN,
     defaultValue: false
+  },
+  sid: {
+    type: DataTypes.INTEGER,
+    allowNull: true
   }
 }, {
   sequelize,

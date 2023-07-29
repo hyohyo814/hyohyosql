@@ -29,7 +29,12 @@ const errorHandler = (err, req, res, next) => {
 
 
 const sessionVerifier = async (req, res, next) => {
+  const user = await User.findByPk(req.decodedToken.id);
+
   const session = await Session.findOne({
+    where: {
+      id: user.sid
+    },
     include: {
       model: User,
       where: {

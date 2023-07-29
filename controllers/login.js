@@ -4,6 +4,7 @@ const { uuid } = require('uuidv4');
 
 const { SECRET } = require('../util/config');
 const { User, Session } = require('../models');
+const { client_encoding } = require('pg/lib/defaults');
 
 
 router.post('/', async (req, res) => {
@@ -40,11 +41,19 @@ router.post('/', async (req, res) => {
 
   console.log(`===================${seedGen}==================`)
   console.log(`===================${user.id}==================`)
-  await Session.create({
+  
+  const session = await Session.create({
     seed: seedGen,
     userId: user.id,
-    active: true
+    active: true,
   });
+
+  console.log(`===================${session.id}===================`);
+
+  user.sid = session.id;
+  await user.save();
+
+  
 
   const token = jwt.sign(userForToken, SECRET);
 
